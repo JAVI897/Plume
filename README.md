@@ -1,56 +1,9 @@
-<div align="center">
-
-## Plume: the first LLM trained for NMT with only parallel Catalan-Centric data from scratch
-
-#### [Javier García](https://www.bsc.es/ca/garcia-gilabert-javier), [Carlos Escolano](https://www.bsc.es/es/escolano-peinado-carlos), [Aleix Sant](https://www.bsc.es/es/sant-savall-aleix), [Francesca De Luca](https://www.bsc.es/de-luca-fornaciari-francesca), [Audrey Mash](https://www.bsc.es/mash-audrey), [Xixian Liao](https://www.bsc.es/es/liao-xixian) and [Maite Melero](https://www.bsc.es/melero-nogues-maite)
-
-<div align="center">
-   <img src="figs/logo_plume.png" alt="plume logo" width="100"><br><br>
-</div>
-
-[![python](https://img.shields.io/badge/-Python_3.10-blue?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-3100/)
-[![pytorch](https://img.shields.io/badge/PyTorch_2.0+-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/)
-[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)]()
-
-</div>
-
 > This repository contains the code for the paper "Investigating the translation capabilities of Large Language Models trained
-on parallel data only". The preprint is available on [arXiv](https://arxiv.org/abs/2406.09140) and models are available at HuggingFace 🤗: [Plume 32k](https://huggingface.co/projecte-aina/Plume32k), [Plume 128k](https://huggingface.co/projecte-aina/Plume128k) and [Plume 256k](https://huggingface.co/projecte-aina/Plume256k).
+on parallel data only".
 
 #### Abstract
 
 In recent years, Large Language Models (LLMs) have demonstrated exceptional proficiency across a broad spectrum of Natural Language Processing (NLP) tasks, including Machine Translation. However, previous methodologies predominantly relied on iterative processes such as instruction fine-tuning or continual pre-training, leaving unexplored the challenges of training LLMs solely on parallel data. In this work, we introduce Plume (**P**arallel **L**ang**u**age **M**od**e**l), a collection of three 2B LLMs featuring varying vocabulary sizes (32k, 128k, and 256k) trained exclusively on  Catalan-centric parallel examples. These models perform comparable to previous encoder-decoder architectures on 16 supervised translation directions and 56 zero-shot ones. Utilizing this set of models, we conduct a thorough investigation into the translation capabilities of LLMs, probing their performance, the impact of the different elements of the prompt, and their cross-lingual representation space.
-
-## Models Description
-
-Plume is the first LLM trained for Neural Machine Translation with only parallel Catalan-Centric data from scratch. It is a language model with the same architecture as Gemma 2B. The model is trained for general translation tasks at sentence level. Information about training, architecture and interpretability of the model are described in the paper.
-
-- **Developed by:** The Language Technologies Unit from Barcelona Supercomputing Center (BSC).
-- **Languages:** Spanish, French, Italian, Portuguese, Galician, German, English, and Basque.
-- **License:** Apache License, Version 2.0
-
-## Running the models
-
-```python
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-model_id = "projecte-aina/Plume32k" # "projecte-aina/Plume128k" "projecte-aina/Plume256k"
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(model_id)
-
-# language codes: spa_Latn (Spanish), cat_Latn (Catalan), eng_Latn (English), ita_Latn (Italian), 
-# eus_Latn (Basque), deu_Latn (German), por_Latn (Portuguese), glg_Latn (Galician), fra_Latn (French)
-
-src_lang_code = 'spa_Latn'
-tgt_lang_code = 'cat_Latn'
-sentence = 'Ayer se fue, tomó sus cosas y se puso a navegar.'
-prompt = '<s> [{}] {} \n[{}]'.format(src_lang_code, sentence, tgt_lang_code)
-input_ids = tokenizer(prompt, return_tensors='pt').input_ids
-output_ids = model.generate( input_ids, max_length=200, num_beams=5 )
-input_length = input_ids.shape[1]
-generated_text = tokenizer.decode(output_ids[0, input_length: ], skip_special_tokens=True).strip()
-# Ahir se'n va anar, va agafar les seves coses i es va posar a navegar.
-```
 
 ## Running experiments
 
@@ -175,27 +128,3 @@ We provide the script to compute the vocabulary overlap between pair of language
 ```bash
 bash ./voc_overlap/compute_overlapping.sh
 ```
-
-## Citation
-
-```bibtex
-@misc{gilabert2024investigating,
-      title={Investigating the translation capabilities of Large Language Models trained on parallel data only}, 
-      author={Javier García Gilabert and Carlos Escolano and Aleix Sant Savall and Francesca De Luca Fornaciari and Audrey Mash and Xixian Liao and Maite Melero},
-      year={2024},
-      eprint={2406.09140},
-      archivePrefix={arXiv}
-}
-```
-
-## Acknowledgements
-
-This work has been promoted and financed by the Government of Catalonia through the [Aina](https://projecteaina.cat/) project, by the Ministerio para la Transformación Digital y de la Función Pública and Plan de Recuperación, Transformación y Resiliencia - Funded by EU – NextGenerationEU within the framework of the project [ILENIA](https://proyectoilenia.es/) with reference 2022/TL22/00215337, 2022/TL22/00215336, 2022/TL22/00215335, 2022/TL22/00215334, as well as by [DeepR3](https://ixa2.si.ehu.eus/deepr3/) (TED2021-130295B-C32) founded by MCIN/AEI/10.13039/501100011033 and European Union NextGeneration EU/PRTR.
-
-## Contact
-
-Please feel free to write us at with any questions you may have to {javier.garcia1, carlos.escolano, aleix.santsavall, francesca.delucafornaciari, audrey.mash, xixian.liao, maite.melero}@bsc.es 
-
-## License
-
-[Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
